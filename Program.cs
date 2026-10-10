@@ -8,6 +8,7 @@ namespace ISIP324_lina
 {
     internal class Program
     {
+        Random rand = new Random();
         class Gamer
         {
             private double health = 100;
@@ -15,31 +16,42 @@ namespace ISIP324_lina
             {
                 set
                 {
-                    if (value < 0) { Console.WriteLine("\n~ ВЫ УМЕРЛИ! ~"); return; }
-                    else if (value > 100) { Console.WriteLine("\n - Ошибкинс! Больше 100HP быть не может!"); return; }
+                    if (value < 0) { 
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine("\n~ ВЫ УМЕРЛИ! ~");
+                        Console.ResetColor();
+                        return; 
+                    }
+                    else if (value > 100) { Console.WriteLine("\n - Ошибкинс! Больше 100HP быть не может! - "); return; }
                     health = value;
                 }
                 get { return health; }
             }
 
-            private string weapon = "Деревянный меч";
-            public string Weapon
+            public Dictionary<string, int> weapon = new Dictionary<string, int>()
+            {
+                { "Деревянный меч", 10 }
+            };
+            public Dictionary<string, int> Weapon
             {
                 set
                 {
-                    if (string.IsNullOrEmpty(value)) { Console.WriteLine(" !- У ВАС НЕТ ОРУЖИЯ -! "); return; }
+                    if (value.Count <= 0) { Console.WriteLine(" !- У ВАС НЕТ ОРУЖИЯ -! "); return; }
                     // if оружия больше, чем 2
                     weapon = value;
                 }
                 get { return weapon; }
             }
 
-            private string armor = "Жабья кожа";
-            public string Armor
+            public Dictionary<string, int> armor = new Dictionary<string, int>()
+            {
+                { "Жабья кожа", 5 }
+            };
+            public Dictionary<string, int> Armor
             {
                 set
                 {
-                    if (string.IsNullOrEmpty(value)) { Console.WriteLine(" !- У ВАС НЕТ ДОСПЕХ -! "); return; }
+                    if (value.Count <= 0) { Console.WriteLine(" !- У ВАС НЕТ ДОСПЕХ -! "); return; }
                     // if оружия больше, чем 2
                     armor = value;
                 }
@@ -49,7 +61,7 @@ namespace ISIP324_lina
             {
                 Console.WriteLine("+++ ВАШЕ ТЕКУЩЕЕ СОСТОЯНИЕ +++" +
                     $"\n\tЗдоровье: {Health}" +
-                    $"\n\tОружие: {Weapon}" +
+                    $"\n\tОружие: {Weapon.Keys}" +
                     $"\n\tДоспехи: {Armor}");
             }
         }
@@ -225,6 +237,86 @@ namespace ISIP324_lina
             public override decimal Protection => base.Protection * 0.6m;
             public override decimal Froze_chance => base.Froze_chance + 20m;
         }
+        Dictionary<string, int> items = new Dictionary<string, int>()
+        {
+            { "Палка копалка", 25 },
+            { "Меч кладенец", 40 },
+            { "Хвост кошки", 60 },
+            { "Золотая сковородка", 100 },
+            { "Лечебное зелье", 100 },
+            { "Гематогенка", 50 },
+            { "Мантия невидимка", 100 },
+            { "Кожа дракона", 50 }
+        };
+
+        static Gamer g = new Gamer();
+
+        void MysteryCase()
+        {
+            Console.WriteLine("- Вы нашли сундук!!! -");
+            var rand_item = items.ElementAt(rand.Next(items.Count));
+            Console.WriteLine($"$% ПОЗДРАВЛЯЕМ! Вы нашли новую вещь:");
+            if (rand_item.Key.Contains("Лечебное зелье") || rand_item.Key.Contains("Гематогенка"))
+            {
+                Console.WriteLine($"{rand_item.Key}, лечащее на {rand_item.Value}HP!");
+                g.Health += rand_item.Value;
+                if (g.Health > 100)
+                {
+                    g.Health = 100;
+                    Console.WriteLine($"~ Вы полностью исцелились! HP: {g.Health} ~");
+                }
+                else
+                {
+                    Console.WriteLine($"~ Вы полностью исцелились! HP: {g.Health} ~");
+                }
+            }
+            if (rand_item.Key.Contains("Мантия невидимка") || rand_item.Key.Contains("Кожа дракона"))
+            {
+                Console.WriteLine($"{rand_item.Key}, защищающее на {rand_item.Value}%!");
+                Console.Write("- Забрать или бросить? (да/нет): ");
+                string ans = Console.ReadLine().Trim().ToLower();
+                switch (ans)
+                {
+                    case "да":
+                        g.Armor.Clear();
+                        g.Armor.Add(rand_item.Key, rand_item.Value);
+                        Console.WriteLine($"~ Вы забрали {rand_item.Key}! ~");
+                        g.Info();
+                        break;
+                    case "нет":
+                        Console.WriteLine("- Ну... Идём дальше! ");
+                        g.Info();
+                        break;
+                    default:
+                        Console.WriteLine("- Ничего не понятно, но очень интересно... Иди c богом!\n");
+                        break;
+                }
+            }
+            else
+            {
+                Console.WriteLine($"~ {rand_item.Key}, сбивающее на {rand_item.Value}HP! ~");
+                Console.Write("- Забрать или бросить? (да/нет): ");
+                string ans2 = Console.ReadLine().Trim().ToLower();
+                switch (ans2)
+                {
+                    case "да":
+                        g.Weapon.Clear();
+                        g.Weapon.Add(rand_item.Key, rand_item.Value);
+                        Console.WriteLine($"~ Вы забрали {rand_item.Key}! ~");
+                        g.Info();
+                        break;
+                    case "нет":
+                        Console.WriteLine("-*- Ну... Идём дальше! ");
+                        g.Info();
+                        break;
+                    default:
+                        Console.WriteLine("-*- Ничего не понятно, но очень интересно... Иди c богом!\n");
+                        break;
+                }
+            }
+        }
+
+
 
         static void Main(string[] args)
         {
