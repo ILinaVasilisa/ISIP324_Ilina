@@ -77,12 +77,12 @@ namespace ISIP324_lina
         class Goblin : Villian
         {
             public override string Name => "Гоблин-блин";
-            public decimal health = 80;
+            protected decimal health = 80;
             public override decimal Health
             {
                 set
                 {
-                    if (health < 0) { Console.WriteLine("$- ГОБЛИН ПОВЕРЖЕН! -$"); return; }
+                    if (value <= 0) { Console.WriteLine("$- ГОБЛИН ПОВЕРЖЕН! -$"); return; }
                     health = value;
                 }
                 get { return health; }
@@ -96,12 +96,12 @@ namespace ISIP324_lina
         class Skeleton : Villian
         {
             public override string Name => "Скелет-велосипед";
-            public decimal health = 100;
+            protected decimal health = 100;
             public override decimal Health
             {
                 set
                 {
-                    if (health < 0) { Console.WriteLine("$- СКЕЛЕТ ПОВЕРЖЕН! -$"); return; }
+                    if (value <= 0) { Console.WriteLine("$- СКЕЛЕТ ПОВЕРЖЕН! -$"); return; }
                     health = value;
                 }
                 get { return health; }
@@ -115,12 +115,12 @@ namespace ISIP324_lina
         class Wizard : Villian
         {
             public override string Name => "Маг-макдак";
-            public decimal health = 100;
+            protected decimal health = 150;
             public override decimal Health
             {
                 set
                 {
-                    if (health < 0) { Console.WriteLine("$- МАГ ПОВЕРЖЕН! -$"); return; }
+                    if (value <= 0) { Console.WriteLine("$- МАГ ПОВЕРЖЕН! -$"); return; }
                     health = value;
                 }
                 get { return health; }
@@ -131,7 +131,100 @@ namespace ISIP324_lina
             public override decimal Froze_chance => 10m;
         }
 
+        class VVG : Goblin //Сохраняет: шанс критического удара.
+        {
+            /*Здоровье ×2.0 от базового гоблина.
+             * Атака ×1.5.
+             * Защита ×1.2.
+             * Шанс крита +10%. к значению обычного гоблина.*/
+            public override string Name => "ВВГ (раса гоблинов)";
+            public override decimal Health
+            {
+                set
+                {
+                    if (value <= 0) { Console.WriteLine("!$%*- ВВГ ПОВЕРЖЕН! -*%$!"); return; }
+                    health = value;
+                }
+            }
+            public VVG()
+            {
+                health = 160m;
+            }
+            public override decimal Attack => base.Attack * 1.5m;
+            public override decimal Protection => base.Protection * 1.2m;
+            public override decimal Crit_dam => base.Crit_dam + 10m;
+        }
 
+        class Kovalskiy : Skeleton //Сохраняет: полностью игнорирует защиту игрока.
+        {
+            /*Здоровье ×2.5.
+             * Атака ×1.3.
+             * Защита ×1.4.*/
+            public override string Name => "Ковальский (раса скелет)";
+            public override decimal Health
+            {
+                set
+                {
+                    if (value <= 0) { Console.WriteLine("!$%*- КОВАЛЬСКИЙ ПОВЕРЖЕН! -*%$!"); return; }
+                    health = value;
+                }
+            }
+            public Kovalskiy()
+            {
+                health = 250m;
+            }
+            public override decimal Attack => base.Attack * 1.3m;
+            public override decimal Protection => base.Protection * 1.4m;
+
+        }
+
+        class Archimag : Wizard //Сохраняет: шанс наложить заморозку (пропуск хода).
+        {
+            /*Здоровье ×1.8.
+             * Атака ×1.6.
+             * Защита ×1.1.
+             * Шанс заморозки +10%. к значению обычного мага.*/
+            public override string Name => "Архимаг С++ (раса магов)";
+            public override decimal Health
+            {
+                set
+                {
+                    if (value <= 0) { Console.WriteLine("!$%*- АРХИМАГ С++ ПОВЕРЖЕН! -*%$!"); return; }
+                    health = value;
+                }
+            }
+            public Archimag()
+            {
+                health = 270m;
+            }
+            public override decimal Attack => base.Attack * 1.6m;
+            public override decimal Protection => base.Protection * 1.1m;
+            public override decimal Froze_chance => base.Froze_chance + 10m;
+        }
+
+        class Pestov : Skeleton //Сохраняет: полностью игнорирует защиту игрока.
+        {
+            /*Здоровье ×1.3.
+             * Атака ×1.8.
+             * Защита ×0.6.
+             * Шанс заморозки +15%. к значению обычного мага.*/
+            public override string Name => "Пестов С-- (раса скелетов)";
+            public override decimal Health
+            {
+                set
+                {
+                    if (value <= 0) { Console.WriteLine("!$%*- ПЕСТОВ С-- ПОВЕРЖЕН! -*%$!"); return; }
+                    health = value;
+                }
+            }
+            public Pestov()
+            {
+                health = 130m;
+            }
+            public override decimal Attack => base.Attack * 1.8m;
+            public override decimal Protection => base.Protection * 0.6m;
+            public override decimal Froze_chance => base.Froze_chance + 20m;
+        }
 
         static void Main(string[] args)
         {
