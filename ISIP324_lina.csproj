@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{F8C34D87-36F2-4532-BF5B-DCFF88FACFBA}</ProjectGuid>
+    <ProjectGuid>{6049A237-7857-0081-DAB5-D79AB30D8686}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <RootNamespace>ISIP324_lina</RootNamespace>
     <AssemblyName>ISIP324_lina</AssemblyName>
